@@ -1,0 +1,817 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="مطعم أصل المندي في البصرة - أشهى المندي والمأكولات الخليجية واليمنية الأصيلة. استمتع بتجربة طعام لا تُنسى في قلب البصرة مع أطباقنا المحضّرة بأفضل المكونات وأعرق الوصفات التقليدية.">
+  <meta name="keywords" content="مندي, مطعم البصرة, خليجي, يمني, مشاوي, أصل المندي, طعام عربي, مطعم عراقي">
+  <meta property="og:title" content="أصل المندي - المطعم الخليجي الأصيل في البصرة">
+  <meta property="og:description" content="أشهى المندي والمأكولات الخليجية واليمنية الأصيلة في قلب البصرة">
+  <title>أصل المندي | المطعم الخليجي الأصيل - البصرة</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/hero_mandi.png">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVBAR
+       ============================================================ -->
+  <nav id="navbar">
+    <div class="container nav-container">
+      <a href="#hero" class="nav-logo">
+        <span class="logo-ar">🍖 أصل المندي</span>
+        <span class="logo-en">Asl Al-Mandi Restaurant</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a href="#hero" class="active">الرئيسية</a></li>
+        <li><a href="#menu">قائمة الطعام</a></li>
+        <li><a href="#about">من نحن</a></li>
+        <li><a href="#gallery">معرض الصور</a></li>
+        <li><a href="#testimonials">آراء عملائنا</a></li>
+        <li><a href="#contact">تواصل معنا</a></li>
+      </ul>
+
+      <a href="#reservation" class="btn btn-primary nav-cta">احجز طاولتك</a>
+
+      <button class="hamburger" id="hamburger" aria-label="فتح القائمة">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#hero" onclick="closeMobile()">🏠 الرئيسية</a>
+    <a href="#menu" onclick="closeMobile()">🍖 قائمة الطعام</a>
+    <a href="#about" onclick="closeMobile()">👨‍🍳 من نحن</a>
+    <a href="#gallery" onclick="closeMobile()">📸 معرض الصور</a>
+    <a href="#testimonials" onclick="closeMobile()">💬 آراء العملاء</a>
+    <a href="#contact" onclick="closeMobile()">📞 تواصل معنا</a>
+    <a href="#reservation" class="btn btn-primary" onclick="closeMobile()">احجز طاولتك</a>
+  </div>
+
+  <!-- ============================================================
+       HERO SECTION
+       ============================================================ -->
+  <section id="hero">
+    <div class="hero-bg">
+      <img src="images/hero_mandi.png" alt="مندي أصل المطعم" id="heroBg">
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-particles" id="particles"></div>
+
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          مطعم خليجي أصيل منذ 2010
+        </div>
+
+        <h1 class="hero-title">
+          الطعم الأصيل
+          <span class="highlight">أصل المندي</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          🌿 مندي يمني أصيل · مشاوي فاخرة · أرز خليجي بالزعفران
+        </p>
+
+        <p class="hero-desc">
+          تجربة مطعم استثنائية تأخذك في رحلة عميقة إلى عالم النكهات الخليجية واليمنية الأصيلة.
+          مطبخنا يجمع بين أسرار الوصفات الموروثة وأجود المكونات الطازجة.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#menu" class="btn btn-primary">
+            🍽️ استعرض القائمة
+          </a>
+          <a href="#reservation" class="btn btn-outline">
+            📅 احجز طاولتك الآن
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="container">
+        <div class="stats-row">
+          <div class="stat-item">
+            <div class="stat-num">+15</div>
+            <div class="stat-label">سنوات خبرة</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">+50</div>
+            <div class="stat-label">طبقاً متنوعاً</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">+10K</div>
+            <div class="stat-label">عميل سعيد</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">4.9⭐</div>
+            <div class="stat-label">تقييم العملاء</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       MENU SECTION
+       ============================================================ -->
+  <section id="menu" class="section-padding">
+    <div class="menu-pattern"></div>
+    <div class="container" style="position:relative;z-index:1">
+      <div class="section-title reveal">
+        <span class="subtitle">🍖 قائمة الطعام</span>
+        <h2>أشهى الأطباق الأصيلة</h2>
+        <div class="divider"></div>
+        <p>من المندي الأصيل إلى المشاوي الفاخرة، كل طبق يحكي قصة من التراث والنكهة</p>
+      </div>
+
+      <div class="menu-tabs">
+        <button class="menu-tab active" data-filter="all" id="tab-all">🍽️ جميع الأصناف</button>
+        <button class="menu-tab" data-filter="mandi" id="tab-mandi">🍖 المندي</button>
+        <button class="menu-tab" data-filter="grills" id="tab-grills">🔥 المشاوي</button>
+        <button class="menu-tab" data-filter="rice" id="tab-rice">🌾 الأرز الخليجي</button>
+        <button class="menu-tab" data-filter="apps" id="tab-apps">🥗 المقبلات</button>
+        <button class="menu-tab" data-filter="drinks" id="tab-drinks">🥤 المشروبات</button>
+      </div>
+
+      <div class="menu-grid" id="menuGrid">
+        <!-- Mandi Items -->
+        <div class="menu-card reveal" data-category="mandi">
+          <div class="menu-card-img-wrap">
+            <img src="images/hero_mandi.png" alt="مندي الخروف الكامل" class="menu-card-img">
+            <span class="menu-badge">الأكثر طلباً</span>
+          </div>
+          <div class="menu-card-body">
+            <h3>مندي الخروف الكامل</h3>
+            <p>خروف كامل مطبوخ على الحجر بتوابل اليمن الأصيلة مع أرز البسمتي المعطر بالزعفران</p>
+            <div class="menu-card-footer">
+              <div class="price">130,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card reveal" data-category="mandi">
+          <div class="menu-card-img-wrap">
+            <img src="images/kabsa.png" alt="مندي الدجاج" class="menu-card-img">
+          </div>
+          <div class="menu-card-body">
+            <h3>مندي الدجاج الملكي</h3>
+            <p>دجاجة كاملة مدخنة في التنور الطيني مع أرز العنبر والهيل وقشر الليمون</p>
+            <div class="menu-card-footer">
+              <div class="price">32,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card reveal" data-category="mandi">
+          <div class="menu-card-img-wrap">
+            <img src="images/hero_mandi.png" alt="مندي العسير" class="menu-card-img">
+            <span class="menu-badge">جديد</span>
+          </div>
+          <div class="menu-card-body">
+            <h3>مندي العسير الخاص</h3>
+            <p>طبق العسير التقليدي مع اللحم الأبيض والتوابل السبع المميزة والحنيذ الطازج</p>
+            <div class="menu-card-footer">
+              <div class="price">45,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grills Items -->
+        <div class="menu-card reveal" data-category="grills">
+          <div class="menu-card-img-wrap">
+            <img src="images/grills.png" alt="مشاوي مشكلة" class="menu-card-img">
+            <span class="menu-badge">للعائلات</span>
+          </div>
+          <div class="menu-card-body">
+            <h3>مشاوي مشكلة فاخرة</h3>
+            <p>تشكيلة من ضلوع الغنم، الكفتة، الشاورما العربية مع خبز التنور والمتبل</p>
+            <div class="menu-card-footer">
+              <div class="price">68,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card reveal" data-category="grills">
+          <div class="menu-card-img-wrap">
+            <img src="images/grills.png" alt="ضلوع مشوية" class="menu-card-img">
+          </div>
+          <div class="menu-card-body">
+            <h3>ضلوع الغنم المشوية</h3>
+            <p>ضلوع غنم طازجة متبلة بالتوابل الخليجية ومشوية على الفحم النظيف حتى الاكتمال</p>
+            <div class="menu-card-footer">
+              <div class="price">55,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card reveal" data-category="grills">
+          <div class="menu-card-img-wrap">
+            <img src="images/grills.png" alt="دجاج مشوي" class="menu-card-img">
+          </div>
+          <div class="menu-card-body">
+            <h3>دجاج تنور بالليمون</h3>
+            <p>دجاجة مفردة مشوية في التنور مع صلصة الزبادي والثوم والكزبرة الخضراء</p>
+            <div class="menu-card-footer">
+              <div class="price">25,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rice Items -->
+        <div class="menu-card reveal" data-category="rice">
+          <div class="menu-card-img-wrap">
+            <img src="images/kabsa.png" alt="كبسة الملكي" class="menu-card-img">
+            <span class="menu-badge">الأشهر</span>
+          </div>
+          <div class="menu-card-body">
+            <h3>كبسة الخروف الملكية</h3>
+            <p>أرز بسمتي طويل الحبة بالزعفران والقرفة والهيل مع لحم خروف طري جداً</p>
+            <div class="menu-card-footer">
+              <div class="price">50,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-card reveal" data-category="rice">
+          <div class="menu-card-img-wrap">
+            <img src="images/kabsa.png" alt="مجبوس" class="menu-card-img">
+          </div>
+          <div class="menu-card-body">
+            <h3>مجبوس الربيان</h3>
+            <p>أرز الخليج المعطر مع الربيان الطازج والطماطم والبهارات الخليجية الأصيلة</p>
+            <div class="menu-card-footer">
+              <div class="price">42,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Appetizers -->
+        <div class="menu-card reveal" data-category="apps">
+          <div class="menu-card-img-wrap">
+            <img src="images/appetizers.png" alt="مقبلات مشكلة" class="menu-card-img">
+          </div>
+          <div class="menu-card-body">
+            <h3>مقبلات مشكلة خليجية</h3>
+            <p>حمص، متبل الباذنجان، تبولة، سلطة فتوش، زيتون وخبز تنور طازج</p>
+            <div class="menu-card-footer">
+              <div class="price">17,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drinks -->
+        <div class="menu-card reveal" data-category="drinks">
+          <div class="menu-card-img-wrap">
+            <img src="images/appetizers.png" alt="مشروبات" class="menu-card-img">
+            <span class="menu-badge">طازج</span>
+          </div>
+          <div class="menu-card-body">
+            <h3>عصائر طازجة مشكلة</h3>
+            <p>عصائر الفاكهة الطازجة اليومية والليمون النعناع والتمر هندي المميز</p>
+            <div class="menu-card-footer">
+              <div class="price">7,000 <span>دينار</span></div>
+              <button class="add-btn" title="إضافة للطلب">+</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       ABOUT SECTION
+       ============================================================ -->
+  <section id="about" class="section-padding">
+    <div class="container">
+      <div class="about-grid">
+        <div class="about-images reveal-right">
+          <img src="images/interior.png" alt="أجواء مطعم أصل المندي" class="about-img-main">
+          <img src="images/chef.png" alt="طاقمنا المتخصص" class="about-img-secondary">
+        </div>
+
+        <div class="about-content reveal-left">
+          <div class="subtitle-badge">
+            <span>🌟</span> قصتنا
+          </div>
+
+          <h2>
+            أكثر من <em>15 عاماً</em> من الشغف<br>
+            بالمندي الأصيل
+          </h2>
+
+          <p>
+            بدأت رحلتنا في عام 2010 بحلم بسيط: تقديم مندي يمني أصيل يعيد لكل ضيف ذكريات الدفء والأسرة.
+            اليوم، نحن فخورون بأننا أصبحنا وجهة أهل الذوق الرفيع في المنطقة.
+          </p>
+
+          <p>
+            كل طبق يُعدّ بعناية فائقة باستخدام التنور الطيني التقليدي، وأجود أنواع اللحوم الطازجة،
+            وتوابل مستوردة من اليمن والهند مباشرةً. وصفاتنا موروثة ومحفوظة بأمانة عبر الأجيال.
+          </p>
+
+          <div class="about-features">
+            <div class="feature-item">
+              <div class="feature-icon">🔥</div>
+              <div>
+                <h4>تنور طيني تقليدي</h4>
+                <p>نطبخ كما تعلمنا من آبائنا</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🌿</div>
+              <div>
+                <h4>مكونات طازجة يومياً</h4>
+                <p>لا تجمد، لا مواد حافظة</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">🏅</div>
+              <div>
+                <h4>وصفات موروثة</h4>
+                <p>أسرار التوابل اليمنية الأصيلة</p>
+              </div>
+            </div>
+            <div class="feature-item">
+              <div class="feature-icon">❤️</div>
+              <div>
+                <h4>ضيافة عربية كريمة</h4>
+                <p>أنت عندنا في بيتك الثاني</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="about-stats">
+            <div class="about-stat">
+              <div class="num">+15</div>
+              <div class="lbl">سنة خبرة</div>
+            </div>
+            <div class="about-stat">
+              <div class="num">+50</div>
+              <div class="lbl">وصفة أصيلة</div>
+            </div>
+            <div class="about-stat">
+              <div class="num">+10K</div>
+              <div class="lbl">عميل راضٍ</div>
+            </div>
+            <div class="about-stat">
+              <div class="num">4.9⭐</div>
+              <div class="lbl">متوسط التقييم</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       GALLERY SECTION
+       ============================================================ -->
+  <section id="gallery" class="section-padding">
+    <div class="container">
+      <div class="section-title reveal">
+        <span class="subtitle">📸 معرض الصور</span>
+        <h2>لمحة من عالمنا</h2>
+        <div class="divider"></div>
+        <p>صور حقيقية من مطبخنا وأجوائنا وأطباقنا الشهية</p>
+      </div>
+
+      <div class="gallery-grid">
+        <div class="gallery-item reveal" data-src="images/hero_mandi.png">
+          <img src="images/hero_mandi.png" alt="مندي الخروف الكامل">
+          <div class="gallery-overlay"><span>مندي الخروف الكامل</span></div>
+        </div>
+        <div class="gallery-item reveal" data-src="images/grills.png">
+          <img src="images/grills.png" alt="مشاوي فاخرة">
+          <div class="gallery-overlay"><span>مشاوي فاخرة</span></div>
+        </div>
+        <div class="gallery-item reveal" data-src="images/interior.png">
+          <img src="images/interior.png" alt="أجواء المطعم">
+          <div class="gallery-overlay"><span>أجواء المطعم الراقية</span></div>
+        </div>
+        <div class="gallery-item reveal" data-src="images/kabsa.png">
+          <img src="images/kabsa.png" alt="كبسة ملكية">
+          <div class="gallery-overlay"><span>كبسة خليجية أصيلة</span></div>
+        </div>
+        <div class="gallery-item reveal" data-src="images/appetizers.png">
+          <img src="images/appetizers.png" alt="مقبلات متنوعة">
+          <div class="gallery-overlay"><span>مقبلات شرقية شهية</span></div>
+        </div>
+        <div class="gallery-item reveal" data-src="images/chef.png">
+          <img src="images/chef.png" alt="طاقم الطهاة">
+          <div class="gallery-overlay"><span>طاقمنا المحترف</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox-close" id="lightboxClose">✕</button>
+    <img src="" alt="" id="lightboxImg">
+  </div>
+
+  <!-- ============================================================
+       RESERVATION SECTION
+       ============================================================ -->
+  <section id="reservation" class="section-padding">
+    <div class="container">
+      <div class="section-title reveal">
+        <span class="subtitle">📅 الحجوزات</span>
+        <h2>احجز طاولتك الآن</h2>
+        <div class="divider"></div>
+        <p>احجز طاولتك مسبقاً وضمن لنفسك تجربة استثنائية لا تُنسى</p>
+      </div>
+
+      <div class="reservation-wrap">
+        <div class="reservation-info reveal-right">
+          <div class="subtitle-badge" style="display:inline-flex;align-items:center;gap:8px;font-size:0.85rem;color:var(--primary);font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;">
+            <span>📍</span> معلوماتنا
+          </div>
+          <h2>نسعد <em>بضيافتكم</em><br>في أي وقت</h2>
+          <p>فريقنا جاهز لاستقبالكم وضمان تجربة طعام استثنائية تليق بكم وبأسرتكم الكريمة.</p>
+
+          <div class="info-card">
+            <div class="info-card-icon">🕐</div>
+            <div>
+              <h4>ساعات العمل</h4>
+              <p>الأحد – الخميس: 12:00 ظهراً – 12:00 منتصف الليل<br>الجمعة – السبت: 1:00 ظهراً – 2:00 صباحاً</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-icon">📍</div>
+            <div>
+              <h4>عنواننا</h4>
+              <p>شارع الجمهورية، منطقة العشار<br>البصرة، جمهورية العراق</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <div class="info-card-icon">📞</div>
+            <div>
+              <h4>اتصل بنا</h4>
+              <p>07700-000-111<br>07800-000-222</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="reservation-form reveal-left" id="reservationForm">
+          <h3 class="form-title">🍽️ تفاصيل الحجز</h3>
+
+          <div id="formContent">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="guestName">الاسم الكامل *</label>
+                <input type="text" id="guestName" placeholder="أدخل اسمك الكريم" required>
+              </div>
+              <div class="form-group">
+                <label for="guestPhone">رقم الجوال *</label>
+                <input type="tel" id="guestPhone" placeholder="07xxxxxxxx" required>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="resDate">التاريخ *</label>
+                <input type="date" id="resDate" required>
+              </div>
+              <div class="form-group">
+                <label for="resTime">الوقت *</label>
+                <input type="time" id="resTime" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="guests">عدد الأشخاص *</label>
+              <select id="guests" required>
+                <option value="">اختر عدد الأشخاص</option>
+                <option value="1">شخص واحد</option>
+                <option value="2">شخصان</option>
+                <option value="3-4">3 - 4 أشخاص</option>
+                <option value="5-8">5 - 8 أشخاص (طاولة عائلية)</option>
+                <option value="9-15">9 - 15 شخصاً (قاعة خاصة)</option>
+                <option value="15+">أكثر من 15 (تواصل معنا مباشرة)</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="occasion">المناسبة (اختياري)</label>
+              <select id="occasion">
+                <option value="">لا يوجد مناسبة خاصة</option>
+                <option value="birthday">🎂 عيد ميلاد</option>
+                <option value="anniversary">💍 ذكرى سنوية</option>
+                <option value="business">💼 اجتماع عمل</option>
+                <option value="family">👨‍👩‍👧‍👦 تجمع عائلي</option>
+                <option value="other">أخرى</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="notes">ملاحظات إضافية</label>
+              <textarea id="notes" placeholder="أي طلبات خاصة أو حساسية للطعام أو ملاحظات أخرى..."></textarea>
+            </div>
+
+            <button class="btn btn-primary" style="width:100%;justify-content:center;font-size:1.05rem;padding:16px;" onclick="submitReservation()" id="submitBtn">
+              🎉 تأكيد الحجز
+            </button>
+          </div>
+
+          <div class="form-success" id="formSuccess">
+            <div class="success-icon">🎉</div>
+            <h3>تم استلام حجزك بنجاح!</h3>
+            <p>شكراً لك! سنتصل بك خلال 30 دقيقة لتأكيد الحجز.</p>
+            <br>
+            <a href="#menu" class="btn btn-outline" style="margin:0 auto;">استعرض القائمة</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TESTIMONIALS
+       ============================================================ -->
+  <section id="testimonials" class="section-padding">
+    <div class="container">
+      <div class="section-title reveal">
+        <span class="subtitle">💬 آراء عملائنا</span>
+        <h2>ماذا يقول ضيوفنا؟</h2>
+        <div class="divider"></div>
+        <p>آراء حقيقية من عملائنا الكرام الذين شرّفونا بزيارتهم</p>
+      </div>
+
+      <div class="testimonials-slider reveal">
+        <div class="testimonials-track" id="testimonialsTrack">
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">
+              والله ما رأيت مثل مندي أصل المندي في حياتي! اللحم يذوب في الفم والأرز معطر جداً.
+              جربت مطاعم كثيرة لكن هذا المطعم له مكانة خاصة في قلبي وقلب عائلتي.
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">خ</div>
+              <div>
+                <div class="author-name">خالد المنصور</div>
+                <div class="author-location">📍 البصرة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">
+              تجربة لا تُنسى من أول يوم! الخدمة ممتازة والأجواء راقية جداً.
+              المشاوي المشكلة أنصح بها بشدة، والمقبلات طازجة ورائعة.
+              سأعود بكل تأكيد مع عائلتي.
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">ن</div>
+              <div>
+                <div class="author-name">نورة الأحمدي</div>
+                <div class="author-location">📍 البصرة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">
+              كبسة الخروف الملكية من أفضل ما أكلته. الطعم يذكرك بالبيت ووصفات الجدة.
+              المطعم نظيف والطاقم محترم جداً. شكراً لهذه التجربة الجميلة.
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">ع</div>
+              <div>
+                <div class="author-name">عبدالله السالم</div>
+                <div class="author-location">📍 العمارة</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="testimonial-card">
+            <div class="stars">★★★★★</div>
+            <div class="testimonial-quote">"</div>
+            <p class="testimonial-text">
+              احتفلنا بعيد ميلاد والدي في مطعم أصل المندي وكانت تجربة رائعة للغاية.
+              اهتموا بكل التفاصيل وقدموا لنا خدمة VIP. نشكرهم من القلب.
+            </p>
+            <div class="testimonial-author">
+              <div class="author-avatar">م</div>
+              <div>
+                <div class="author-name">منى الزهراني</div>
+                <div class="author-location">📍 بغداد</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="slider-controls">
+        <button class="slider-dot active" data-slide="0" id="dot-0"></button>
+        <button class="slider-dot" data-slide="1" id="dot-1"></button>
+        <button class="slider-dot" data-slide="2" id="dot-2"></button>
+      </div>
+
+      <div class="slider-arrows">
+        <button class="arrow-btn" id="prevSlide" title="السابق">→</button>
+        <button class="arrow-btn" id="nextSlide" title="التالي">←</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       CONTACT SECTION
+       ============================================================ -->
+  <section id="contact" class="section-padding">
+    <div class="container">
+      <div class="section-title reveal">
+        <span class="subtitle">📞 تواصل معنا</span>
+        <h2>نحن هنا من أجلك</h2>
+        <div class="divider"></div>
+        <p>تواصل معنا في أي وقت وسنكون سعيدين بخدمتك</p>
+      </div>
+
+      <div class="contact-grid">
+        <div>
+          <div class="contact-info-cards">
+            <div class="contact-card reveal">
+              <span class="contact-icon">📞</span>
+              <h3>اتصل بنا</h3>
+              <a href="tel:07700000111">07700-000-111</a>
+              <br>
+              <a href="tel:07800000222">07800-000-222</a>
+            </div>
+
+            <div class="contact-card reveal">
+              <span class="contact-icon">📧</span>
+              <h3>البريد الإلكتروني</h3>
+              <a href="mailto:info@asl-mandi.com">info@asl-mandi.com</a>
+              <br>
+              <a href="mailto:reservation@asl-mandi.com">reservation@asl-mandi.com</a>
+            </div>
+
+            <div class="contact-card reveal">
+              <span class="contact-icon">📍</span>
+              <h3>عنواننا</h3>
+              <p>شارع الجمهورية، منطقة العشار<br>البصرة، جمهورية العراق</p>
+            </div>
+
+            <div class="contact-card reveal">
+              <span class="contact-icon">🕐</span>
+              <h3>ساعات العمل</h3>
+              <p>أحد – خميس: 12 ظهراً – 12 ليلاً<br>جمعة – سبت: 1 ظهراً – 2 صباحاً</p>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;flex-wrap:wrap;">
+            <a href="https://wa.me/96407700000111" class="btn btn-primary">💬 واتساب</a>
+            <a href="tel:07700000111" class="btn btn-outline">📞 اتصل الآن</a>
+          </div>
+        </div>
+
+        <div class="map-wrap reveal-left">
+          <div class="map-placeholder">
+            <div class="map-icon">🗺️</div>
+            <h3>موقعنا على الخريطة</h3>
+            <p>شارع الجمهورية، منطقة العشار، البصرة</p>
+            <br>
+            <a href="https://maps.google.com" target="_blank" class="btn btn-gold" style="margin:0 auto;">
+              📍 افتح في خرائط Google
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="logo-ar">🍖 أصل المندي</span>
+          <p>
+            مطعم أصل المندي، وجهة عشاق المندي اليمني الأصيل والمأكولات الخليجية التقليدية.
+            نقدم أشهى الأطباق بأجود المكونات وأعرق الوصفات الموروثة.
+          </p>
+          <div class="footer-social">
+            <a href="#" class="social-link" title="انستقرام">📷</a>
+            <a href="#" class="social-link" title="تويتر">🐦</a>
+            <a href="#" class="social-link" title="سناب شات">👻</a>
+            <a href="#" class="social-link" title="يوتيوب">▶️</a>
+            <a href="#" class="social-link" title="واتساب">💬</a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>روابط سريعة</h4>
+          <ul class="footer-links">
+            <li><a href="#hero">🏠 الرئيسية</a></li>
+            <li><a href="#menu">🍽️ قائمة الطعام</a></li>
+            <li><a href="#about">👨‍🍳 من نحن</a></li>
+            <li><a href="#gallery">📸 معرض الصور</a></li>
+            <li><a href="#reservation">📅 الحجوزات</a></li>
+            <li><a href="#contact">📞 تواصل معنا</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>ساعات العمل</h4>
+          <ul class="footer-hours">
+            <li><span>الأحد</span><span>12م – 12ل</span></li>
+            <li><span>الاثنين</span><span>12م – 12ل</span></li>
+            <li><span>الثلاثاء</span><span>12م – 12ل</span></li>
+            <li><span>الأربعاء</span><span>12م – 12ل</span></li>
+            <li><span>الخميس</span><span>12م – 12ل</span></li>
+            <li><span>الجمعة</span><span>1م – 2ص</span></li>
+            <li><span>السبت</span><span>1م – 2ص</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2025 أصل المندي. جميع الحقوق محفوظة.</p>
+        <p>صُنع بـ ❤️ لعشاق الطعام الأصيل</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       ADMIN PANEL
+       ============================================================ -->
+  <div class="admin-wrapper container" id="adminWrapper">
+    <div id="login-section" class="admin-box reveal">
+      <h3><span class="contact-icon" style="font-size:1.5rem; display:inline-block; margin-bottom:10px;">🔒</span><br>لوحة تحكم المدير</h3>
+      <div class="form-group">
+        <input type="email" id="admin-email" placeholder="البريد الإلكتروني">
+      </div>
+      <div class="form-group">
+        <input type="password" id="admin-password" placeholder="كلمة المرور">
+      </div>
+      <button class="btn btn-primary" onclick="loginAdmin()" style="width:100%; justify-content:center; font-size:1.1rem; padding:12px;">تسجيل الدخول</button>
+    </div>
+
+    <div id="admin-panel" class="admin-box reveal" style="display:none;">
+      <h3><span class="contact-icon" style="font-size:1.5rem; display:inline-block; margin-bottom:10px;">👨‍🍳</span><br>إضافة وجبة جديدة للمنيو</h3>
+      <div class="form-group">
+        <input type="text" id="meal-name" placeholder="اسم الوجبة">
+      </div>
+      <div class="form-group">
+        <input type="text" id="meal-desc" placeholder="وصف الوجبة">
+      </div>
+      <div class="form-group">
+        <input type="number" id="meal-price" placeholder="السعر (د.ع)">
+      </div>
+      <div class="form-group">
+        <select id="meal-category" style="width:100%; padding:12px; border-radius:8px; background:var(--bg-section); color:var(--text-cream); border:1px solid var(--border);">
+          <option value="mandi">المندي</option>
+          <option value="grills">المشاوي</option>
+          <option value="rice">الأرز الخليجي</option>
+          <option value="apps">المقبلات</option>
+          <option value="drinks">المشروبات</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="meal-image-file" style="display:block; margin-bottom:8px; color:var(--text-muted); font-size:0.9rem;">رفع صورة الوجبة (اختياري)</label>
+        <input type="file" id="meal-image-file" accept="image/*" style="width:100%; padding:10px; background:var(--bg-section); border:1px dashed var(--primary); border-radius:8px; color:var(--text-cream); cursor:pointer;">
+      </div>
+      <button class="btn btn-gold" onclick="addNewMeal()" id="addMealBtn" style="width:100%; justify-content:center; margin-bottom:15px; font-size:1.1rem;">➕ إضافة إلى المنيو</button>
+      <button class="btn btn-outline" onclick="logoutAdmin()" style="width:100%; justify-content:center; border-color:rgba(231, 76, 60, 0.5); color:#e74c3c;">تسجيل خروج</button>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       JAVASCRIPT
+       ============================================================ -->
+  <script src="js/main.js"></script>
+</body>
+</html>
