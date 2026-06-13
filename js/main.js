@@ -587,118 +587,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initialize Supabase only if it exists in the window
   const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
-  // Check initial auth state
-  if (supabase) {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        document.getElementById('login-section').style.display = 'none';
-        document.getElementById('admin-panel').style.display = 'block';
-      }
-    });
-  }
-
-  window.loginAdmin = async function() {
-    if (!supabase) return alert("Supabase is not initialized.");
-    const email = document.getElementById('admin-email').value;
-    const password = document.getElementById('admin-password').value;
-
-    if (!email || !password) return alert("يرجى إدخال البريد الإلكتروني وكلمة المرور.");
-
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-
-    if (error) {
-      alert("فشل تسجيل الدخول: " + error.message);
-    } else {
-      alert("مرحباً بك أيها المدير!");
-      document.getElementById('login-section').style.display = 'none';
-      document.getElementById('admin-panel').style.display = 'block';
-      fetchMeals(); // Refresh to show delete buttons
-    }
-  };
-
-  window.logoutAdmin = async function() {
-    if (!supabase) return;
-    await supabase.auth.signOut();
-    document.getElementById('login-section').style.display = 'block';
-    document.getElementById('admin-panel').style.display = 'none';
-    fetchMeals(); // Refresh to hide delete buttons
-  };
-
-  window.addNewMeal = async function() {
-    if (!supabase) return alert("Supabase is not initialized.");
-    const name = document.getElementById('meal-name').value;
-    const description = document.getElementById('meal-desc').value;
-    const price = document.getElementById('meal-price').value;
-    const category = document.getElementById('meal-category').value;
-    const imageInput = document.getElementById('meal-image-file');
-    
-    if (!name || !price) return alert("يرجى إدخال اسم الوجبة والسعر على الأقل.");
-
-    const btn = document.getElementById('addMealBtn');
-    const originalText = btn.innerHTML;
-    btn.disabled = true;
-    
-    let finalImageUrl = 'images/hero_mandi.png'; // Default image
-
-    try {
-      // 1. Upload Image if selected
-      if (imageInput.files && imageInput.files.length > 0) {
-        btn.innerHTML = '⏳ جارٍ رفع الصورة...';
-        const file = imageInput.files[0];
-        const fileExt = file.name.split('.').pop();
-        const fileName = `${Math.random().toString(36).substring(2)}_${Date.now()}.${fileExt}`;
-        
-        const { data: uploadData, error: uploadError } = await supabase.storage
-          .from('meal-images')
-          .upload(fileName, file);
-
-        if (uploadError) throw new Error("تأكد من إعدادات الـ Storage في Supabase: " + uploadError.message);
-
-        // Get public URL
-        const { data: publicUrlData } = supabase.storage
-          .from('meal-images')
-          .getPublicUrl(fileName);
-          
-        finalImageUrl = publicUrlData.publicUrl;
-      }
-
-      // 2. Insert Meal into Database
-      btn.innerHTML = '⏳ جارٍ حفظ البيانات...';
-      const { data, error: dbError } = await supabase
-        .from('meals')
-        .insert([{ name, description, price: parseInt(price), category, image_url: finalImageUrl }]);
-
-      if (dbError) throw new Error("خطأ أثناء حفظ الوجبة في قاعدة البيانات: " + dbError.message);
-
-      alert("تمت إضافة الوجبة بنجاح!");
-      
-      // Clear form
-      document.getElementById('meal-name').value = '';
-      document.getElementById('meal-desc').value = '';
-      document.getElementById('meal-price').value = '';
-      imageInput.value = '';
-      fetchMeals(); // Refresh the menu
-
-    } catch (err) {
-      alert(err.message);
-    } finally {
-      btn.innerHTML = originalText;
-      btn.disabled = false;
-    }
-  };
-
-  window.deleteMeal = async function(id) {
-    if (!supabase) return;
-    if (!confirm("هل أنت متأكد من حذف هذه الوجبة نهائياً؟")) return;
-    
-    const { error } = await supabase.from('meals').delete().eq('id', id);
-    if (error) {
-      alert("حدث خطأ أثناء الحذف: " + error.message);
-    } else {
-      fetchMeals(); // Refresh the menu
-    }
-  };
-
   window.fetchMeals = async function() {
     if (!supabase) return;
     
@@ -707,10 +595,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.log('Supabase is using placeholder keys. Skipping dynamic fetch. Showing static items.');
       return;
     }
-
-    // Check if admin is logged in
-    const { data: sessionData } = await supabase.auth.getSession();
-    const isAdmin = sessionData?.session !== null;
 
     const { data: meals, error } = await supabase
       .from('meals')
@@ -758,15 +642,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         badgeHTML = `<span class="menu-badge ${badgeClass}">${tag}</span>`;
       }
-      
-      let adminControls = '';
-      if (isAdmin) {
-        adminControls = `
-          <button onclick="deleteMeal(${meal.id})" style="width:100%; margin-top:12px; background:rgba(231,76,60,0.1); color:#e74c3c; border:1px solid #e74c3c; border-radius:8px; padding:8px; font-family:var(--font-main); cursor:pointer; transition:0.3s;" onmouseover="this.style.background='#e74c3c'; this.style.color='white';" onmouseout="this.style.background='rgba(231,76,60,0.1)'; this.style.color='#e74c3c';">
-            🗑️ حذف الوجبة
-          </button>
-        `;
-      }
 
       card.innerHTML = `
         <div class="menu-card-img-wrap">
@@ -780,7 +655,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="price">${meal.price.toLocaleString()} <span>دينار</span></div>
             <button class="add-btn" title="إضافة للطلب" onclick="addToCart('${meal.id}', '${meal.name}', ${meal.price}, '${meal.image_url || 'images/hero_mandi.png'}'); this.innerHTML='✓'; this.style.background='#2ecc71'; this.style.color='white'; this.style.borderColor='#2ecc71'; setTimeout(()=> {this.innerHTML='+'; this.style.background=''; this.style.color=''; this.style.borderColor='';}, 1500)">+</button>
           </div>
-          ${adminControls}
         </div>
       `;
       menuGrid.appendChild(card);
