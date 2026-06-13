@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم المدير | أصل المندي</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap" rel="stylesheet">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --primary: #E8751A;
+      --bg: #0d0d0d;
+      --bg-card: #1a1a1a;
+      --bg-input: #222;
+      --border: rgba(255,255,255,0.08);
+      --text: #f0e6d3;
+      --text-muted: #888;
+      --success: #2ecc71;
+      --danger: #e74c3c;
+    }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .logo { font-size: 2rem; font-weight: 900; color: var(--primary); display: block; text-align: center; margin-bottom: 6px; }
+    .sub  { color: var(--text-muted); font-size: 0.95rem; text-align: center; margin-bottom: 36px; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 36px;
+      width: 100%; max-width: 520px;
+      margin-bottom: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .card h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+    label { display: block; font-size: 0.88rem; color: var(--text-muted); margin-bottom: 7px; margin-top: 14px; }
+    input, select {
+      width: 100%; padding: 12px 16px;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 10px; color: var(--text);
+      font-family: 'Tajawal', sans-serif; font-size: 0.95rem;
+      outline: none; transition: border-color 0.3s;
+    }
+    input:focus, select:focus { border-color: var(--primary); }
+    input[type="file"] { border: 1px dashed var(--primary); cursor: pointer; }
+    .btn {
+      display: block; width: 100%; padding: 13px;
+      border-radius: 10px; border: none; cursor: pointer;
+      font-family: 'Tajawal', sans-serif; font-size: 1rem; font-weight: 700;
+      margin-top: 18px; transition: all 0.3s;
+    }
+    .btn-primary { background: linear-gradient(135deg, var(--primary), #c4621a); color: white; }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .btn-danger { background: transparent; color: var(--danger); border: 1px solid var(--danger); }
+    .btn-danger:hover { background: var(--danger); color: white; }
+    .btn-logout { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+    .btn-logout:hover { border-color: var(--danger); color: var(--danger); }
+    .alert {
+      padding: 12px 16px; border-radius: 10px; font-size: 0.9rem;
+      margin-bottom: 16px; display: none;
+    }
+    .alert.show { display: block; }
+    .alert-error   { background: rgba(231,76,60,0.1);  border: 1px solid rgba(231,76,60,0.4);  color: var(--danger); }
+    .alert-success { background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.4); color: var(--success); }
+    .alert-info    { background: rgba(232,117,26,0.1); border: 1px solid rgba(232,117,26,0.4); color: var(--primary); }
+    .meal-row {
+      display: flex; align-items: center; gap: 12px;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 12px; padding: 12px; margin-bottom: 10px;
+    }
+    .meal-row img { width: 54px; height: 54px; object-fit: cover; border-radius: 8px; flex-shrink: 0; }
+    .meal-info { flex: 1; }
+    .meal-info h4 { font-size: 0.95rem; }
+    .meal-info span { font-size: 0.82rem; color: var(--primary); }
+    .meal-info small { display: block; font-size: 0.78rem; color: var(--text-muted); }
+    .del-btn {
+      background: transparent; border: 1px solid rgba(231,76,60,0.3);
+      color: var(--danger); border-radius: 8px; padding: 6px 10px;
+      cursor: pointer; transition: all 0.3s; flex-shrink: 0;
+    }
+    .del-btn:hover { background: var(--danger); color: white; }
+    .empty { text-align: center; padding: 30px; color: var(--text-muted); }
+    a.back { color: var(--text-muted); font-size: 0.88rem; text-decoration: none; display: block; text-align: center; margin-top: 10px; }
+    a.back:hover { color: var(--primary); }
+    #panelWrap { width: 100%; max-width: 520px; }
+    
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.85);
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 30px;
+      width: 100%;
+      max-width: 500px;
+      position: relative;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      overflow-y: auto;
+      max-height: 90vh;
+    }
+    .close-btn {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: color 0.3s;
+    }
+    .close-btn:hover {
+      color: var(--danger);
+    }
+    .edit-btn {
+      background: transparent; border: 1px solid rgba(232, 117, 26, 0.3);
+      color: var(--primary); border-radius: 8px; padding: 6px 10px;
+      cursor: pointer; transition: all 0.3s; flex-shrink: 0;
+    }
+    .edit-btn:hover { background: var(--primary); color: white; }
+    .tag-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .tag-popular { background: linear-gradient(135deg, #FF416C, #FF4B2B); color: white; }
+    .tag-family { background: linear-gradient(135deg, #11998e, #38ef7d); color: white; }
+    .tag-new { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
+    .tag-special { background: linear-gradient(135deg, #ffe259, #ffa751); color: #1a1208; }
+    .tag-spicy { background: linear-gradient(135deg, #f857a6, #ff5858); color: white; }
+    .tag-default { background: var(--primary); color: white; }
+  </style>
+</head>
+<body>
+
+  <span class="logo">🍖 أصل المندي</span>
+  <p class="sub">لوحة تحكم المدير</p>
+
+  <!-- LOGIN -->
+  <div class="card" id="loginCard">
+    <h2>🔒 تسجيل دخول المدير</h2>
+    <div class="alert" id="loginAlert"></div>
+    <label>البريد الإلكتروني</label>
+    <input type="email" id="email" placeholder="admin@example.com">
+    <label>كلمة المرور</label>
+    <input type="password" id="password" placeholder="••••••••">
+    <button class="btn btn-primary" id="loginBtn">🔑 تسجيل الدخول</button>
+    <a href="index.html" class="back">← العودة للموقع</a>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="panelWrap" style="display:none;">
+
+    <div class="card">
+      <h2>➕ إضافة وجبة جديدة</h2>
+      <div class="alert" id="addAlert"></div>
+      <label>اسم الوجبة *</label>
+      <input type="text" id="mealName" placeholder="مثال: مندي خروف كامل">
+      <label>وصف الوجبة</label>
+      <input type="text" id="mealDesc" placeholder="وصف مختصر">
+      <label>السعر (دينار) *</label>
+      <input type="number" id="mealPrice" placeholder="مثال: 25000">
+      <label>الفئة *</label>
+      <select id="mealCat">
+        <option value="mandi">🍖 المندي</option>
+        <option value="grills">🔥 المشاوي</option>
+        <option value="rice">🌾 الأرز الخليجي</option>
+        <option value="apps">🥗 المقبلات</option>
+        <option value="drinks">🥤 المشروبات</option>
+      </select>
+      <label>تصنيف الوجبة (وسم خاص)</label>
+      <select id="mealTag">
+        <option value="">-- بدون تصنيف --</option>
+        <option value="الأكثر شهرة">🔥 الأكثر شهرة</option>
+        <option value="عائلية">👨‍👩‍👧‍👦 عائلية</option>
+        <option value="جديد">✨ جديد</option>
+        <option value="عرض خاص">🎁 عرض خاص</option>
+        <option value="حار">🌶️ حار / سبايسي</option>
+      </select>
+      <label>صورة الوجبة (اختياري)</label>
+      <input type="file" id="mealImg" accept="image/*">
+      <button class="btn btn-primary" id="addBtn">➕ إضافة إلى المنيو</button>
+    </div>
+
+    <div class="card">
+      <h2>📋 الوجبات الحالية</h2>
+      <div class="alert" id="listAlert"></div>
+      <div id="mealsList"><div class="empty">⏳ جارٍ التحميل...</div></div>
+    </div>
+
+    <!-- EDIT MEAL MODAL -->
+    <div id="editModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeEditBtn">&times;</span>
+        <h2>✏️ تعديل الوجبة</h2>
+        <div class="alert" id="editAlert"></div>
+        <input type="hidden" id="editMealId">
+        <label>اسم الوجبة *</label>
+        <input type="text" id="editMealName" placeholder="مثال: مندي خروف كامل">
+        <label>وصف الوجبة</label>
+        <input type="text" id="editMealDesc" placeholder="وصف مختصر">
+        <label>السعر (دينار) *</label>
+        <input type="number" id="editMealPrice" placeholder="مثال: 25000">
+        <label>الفئة *</label>
+        <select id="editMealCat">
+          <option value="mandi">🍖 المندي</option>
+          <option value="grills">🔥 المشاوي</option>
+          <option value="rice">🌾 الأرز الخليجي</option>
+          <option value="apps">🥗 المقبلات</option>
+          <option value="drinks">🥤 المشروبات</option>
+        </select>
+        <label>تصنيف الوجبة (وسم خاص)</label>
+        <select id="editMealTag">
+          <option value="">-- بدون تصنيف --</option>
+          <option value="الأكثر شهرة">🔥 الأكثر شهرة</option>
+          <option value="عائلية">👨‍👩‍👧‍👦 عائلية</option>
+          <option value="جديد">✨ جديد</option>
+          <option value="عرض خاص">🎁 عرض خاص</option>
+          <option value="حار">🌶️ حار / سبايسي</option>
+        </select>
+        <label>صورة الوجبة (اختياري - اترك فارغاً للإبقاء على الصورة الحالية)</label>
+        <input type="file" id="editMealImg" accept="image/*">
+        <button class="btn btn-primary" id="editSaveBtn">💾 حفظ التغييرات</button>
+      </div>
+    </div>
+
+    <div class="card" style="text-align:center;">
+      <button class="btn btn-logout" id="logoutBtn" style="margin-top:0;">🚪 تسجيل الخروج</button>
+      <a href="index.html" class="back">← العودة للموقع</a>
+    </div>
+
+  </div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const URL_SB  = 'https://giuhysnneywpyxpguqjw.supabase.co';
+    const KEY_SB  = 'sb_publishable_R21pW29PjhqmYuAuqk87_g_pCbqNIl8';
+    const WA_NUM  = '9647708039500';
+    const CATS    = { mandi:'🍖 المندي', grills:'🔥 المشاوي', rice:'🌾 الأرز', apps:'🥗 المقبلات', drinks:'🥤 المشروبات' };
+
+    // ── Helpers ──
+    function showAlert(id, msg, type) {
+      const el = document.getElementById(id);
+      el.textContent = msg;
+      el.className = 'alert alert-' + type + ' show';
+      if (type === 'success') setTimeout(() => el.classList.remove('show'), 4000);
+    }
+    function hideAlert(id) { document.getElementById(id).classList.remove('show'); }
+
+    // ── Init Supabase ──
+    let db = null;
+    let currentMeals = [];
+    window.addEventListener('load', function() {
+      try {
+        db = window.supabase.createClient(URL_SB, KEY_SB);
+        console.log('✅ Supabase ready');
+
+        // Check existing session
+        db.auth.getSession().then(function(res) {
+          if (res.data && res.data.session) showPanel();
+        });
+
+      } catch(e) {
+        showAlert('loginAlert', '❌ فشل الاتصال بقاعدة البيانات: ' + e.message, 'error');
+        console.error(e);
+      }
+
+      // ── Bind buttons ──
+      document.getElementById('loginBtn').addEventListener('click', doLogin);
+      document.getElementById('password').addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') doLogin();
+      });
+      document.getElementById('addBtn').addEventListener('click', doAddMeal);
+      document.getElementById('logoutBtn').addEventListener('click', doLogout);
+      document.getElementById('editSaveBtn').addEventListener('click', doSaveEdit);
+      document.getElementById('closeEditBtn').addEventListener('click', closeEditModal);
+      document.getElementById('editModal').addEventListener('click', function(e) {
+        if (e.target === this) closeEditModal();
+      });
+    });
+
+    // ── Login ──
+    async function doLogin() {
+      if (!db) { showAlert('loginAlert', '❌ قاعدة البيانات غير متصلة', 'error'); return; }
+
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('password').value;
+
+      if (!email || !pass) {
+        showAlert('loginAlert', '⚠️ يرجى إدخال البريد وكلمة المرور', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('loginBtn');
+      btn.textContent = '⏳ جارٍ الدخول...';
+      btn.disabled = true;
+      hideAlert('loginAlert');
+
+      const { data, error } = await db.auth.signInWithPassword({ email, password: pass });
+
+      if (error) {
+        showAlert('loginAlert', '❌ ' + error.message, 'error');
+        btn.textContent = '🔑 تسجيل الدخول';
+        btn.disabled = false;
+      } else {
+        showPanel();
+      }
+    }
+
+    // ── Show Panel ──
+    function showPanel() {
+      document.getElementById('loginCard').style.display = 'none';
+      document.getElementById('panelWrap').style.display = 'block';
+      loadMeals();
+    }
+
+    // ── Logout ──
+    async function doLogout() {
+      if (db) await db.auth.signOut();
+      document.getElementById('loginCard').style.display = 'block';
+      document.getElementById('panelWrap').style.display = 'none';
+    }
+
+    // ── Add Meal ──
+    async function doAddMeal() {
+      if (!db) return;
+
+      const name  = document.getElementById('mealName').value.trim();
+      const desc  = document.getElementById('mealDesc').value.trim();
+      const price = document.getElementById('mealPrice').value;
+      const cat   = document.getElementById('mealCat').value;
+      const tag   = document.getElementById('mealTag').value;
+      const file  = document.getElementById('mealImg').files[0];
+      const btn   = document.getElementById('addBtn');
+
+      if (!name || !price) {
+        showAlert('addAlert', '⚠️ يرجى إدخال اسم الوجبة والسعر', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      let imgUrl = 'images/hero_mandi.png';
+
+      try {
+        if (file) {
+          btn.textContent = '⏳ رفع الصورة...';
+          const ext = file.name.split('.').pop();
+          const fname = Date.now() + '.' + ext;
+          const { error: ue } = await db.storage.from('meal-images').upload(fname, file);
+          if (ue) throw new Error(ue.message);
+          imgUrl = db.storage.from('meal-images').getPublicUrl(fname).data.publicUrl;
+        }
+
+        btn.textContent = '⏳ حفظ...';
+        const fullDesc = tag ? `${desc} [تصنيف:${tag}]` : desc;
+        const { error: de } = await db.from('meals').insert([{
+          name, description: fullDesc, price: parseInt(price), category: cat, image_url: imgUrl
+        }]);
+        if (de) throw new Error(de.message);
+
+        showAlert('addAlert', '✅ تمت إضافة الوجبة بنجاح!', 'success');
+        document.getElementById('mealName').value  = '';
+        document.getElementById('mealDesc').value  = '';
+        document.getElementById('mealPrice').value = '';
+        document.getElementById('mealTag').value   = '';
+        document.getElementById('mealImg').value   = '';
+        loadMeals();
+
+      } catch(e) {
+        showAlert('addAlert', '❌ ' + e.message, 'error');
+      } finally {
+        btn.textContent = '➕ إضافة إلى المنيو';
+        btn.disabled = false;
+      }
+    }
+
+    // ── Delete Meal ──
+    window.doDelete = async function(id, name) {
+      if (!confirm('حذف "' + name + '" نهائياً؟')) return;
+      const { error } = await db.from('meals').delete().eq('id', id);
+      if (error) showAlert('listAlert', '❌ ' + error.message, 'error');
+      else { showAlert('listAlert', '✅ تم الحذف', 'success'); loadMeals(); }
+    };
+
+    // ── Parse Description and Tag ──
+    function parseMealDescription(rawDescription) {
+      let description = rawDescription || '';
+      let tag = '';
+      const match = description.match(/\[تصنيف:(.*?)\]/);
+      if (match) {
+        tag = match[1];
+        description = description.replace(/\[تصنيف:.*?\]/, '').trim();
+      }
+      return { description, tag };
+    }
+
+    // ── Edit Modal Controls ──
+    function closeEditModal() {
+      document.getElementById('editModal').style.display = 'none';
+      hideAlert('editAlert');
+      document.getElementById('editMealImg').value = '';
+    }
+
+    window.editMealByIndex = function(index) {
+      const m = currentMeals[index];
+      if (!m) return;
+      const parsed = parseMealDescription(m.description);
+      
+      document.getElementById('editMealId').value = m.id;
+      document.getElementById('editMealName').value = m.name;
+      document.getElementById('editMealDesc').value = parsed.description;
+      document.getElementById('editMealPrice').value = m.price;
+      document.getElementById('editMealCat').value = m.category;
+      document.getElementById('editMealTag').value = parsed.tag;
+      
+      document.getElementById('editModal').style.display = 'flex';
+    };
+
+    // ── Save Edit ──
+    async function doSaveEdit() {
+      const id    = document.getElementById('editMealId').value;
+      const name  = document.getElementById('editMealName').value.trim();
+      const desc  = document.getElementById('editMealDesc').value.trim();
+      const price = document.getElementById('editMealPrice').value;
+      const cat   = document.getElementById('editMealCat').value;
+      const tag   = document.getElementById('editMealTag').value;
+      const file  = document.getElementById('editMealImg').files[0];
+      const btn   = document.getElementById('editSaveBtn');
+
+      if (!name || !price) {
+        showAlert('editAlert', '⚠️ يرجى إدخال اسم الوجبة والسعر', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = '⏳ حفظ التغييرات...';
+
+      try {
+        let imgUrl = null;
+        if (file) {
+          const ext = file.name.split('.').pop();
+          const fname = Date.now() + '.' + ext;
+          const { error: ue } = await db.storage.from('meal-images').upload(fname, file);
+          if (ue) throw new Error(ue.message);
+          imgUrl = db.storage.from('meal-images').getPublicUrl(fname).data.publicUrl;
+        }
+
+        const fullDesc = tag ? `${desc} [تصنيف:${tag}]` : desc;
+        const updateData = {
+          name,
+          description: fullDesc,
+          price: parseInt(price),
+          category: cat
+        };
+        if (imgUrl) {
+          updateData.image_url = imgUrl;
+        }
+
+        const { error: de } = await db.from('meals').update(updateData).eq('id', id);
+        if (de) throw new Error(de.message);
+
+        showAlert('editAlert', '✅ تم تحديث الوجبة بنجاح!', 'success');
+        setTimeout(() => {
+          closeEditModal();
+          loadMeals();
+        }, 1000);
+
+      } catch(e) {
+        showAlert('editAlert', '❌ ' + e.message, 'error');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '💾 حفظ التغييرات';
+      }
+    }
+
+    // ── Load Meals ──
+    async function loadMeals() {
+      const list = document.getElementById('mealsList');
+      list.innerHTML = '<div class="empty">⏳ جارٍ التحميل...</div>';
+
+      const { data, error } = await db.from('meals').select('*').order('created_at', { ascending: false });
+
+      if (error) { list.innerHTML = '<div class="empty">❌ ' + error.message + '</div>'; return; }
+      if (!data || data.length === 0) { list.innerHTML = '<div class="empty">لا توجد وجبات بعد 🍽️</div>'; return; }
+
+      currentMeals = data;
+      const BADGE_CLASSES = {
+        'الأكثر شهرة': 'tag-popular',
+        'عائلية': 'tag-family',
+        'جديد': 'tag-new',
+        'عرض خاص': 'tag-special',
+        'حار': 'tag-spicy'
+      };
+
+      list.innerHTML = data.map((m, index) => {
+        const parsed = parseMealDescription(m.description);
+        let tagHTML = '';
+        if (parsed.tag) {
+          const badgeClass = BADGE_CLASSES[parsed.tag] || 'tag-default';
+          tagHTML = `<span class="tag-badge ${badgeClass}">${parsed.tag}</span>`;
+        }
+        return `
+          <div class="meal-row">
+            <img src="${m.image_url || 'images/hero_mandi.png'}" onerror="this.src='images/hero_mandi.png'" alt="${m.name}">
+            <div class="meal-info">
+              <h4>${m.name} ${tagHTML}</h4>
+              <span>${m.price.toLocaleString()} دينار</span>
+              <small>${CATS[m.category] || m.category}</small>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button class="edit-btn" onclick="editMealByIndex(${index})">✏️</button>
+              <button class="del-btn" onclick="doDelete(${m.id}, '${m.name.replace(/'/g,"\\'")}')">🗑️</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+  </script>
+</body>
+</html>

@@ -5,6 +5,137 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
+  // ---- Cart System ----
+  let cart = [];
+  
+  window.toggleCart = function() {
+    document.getElementById('cart-sidebar').classList.toggle('active');
+    document.getElementById('cart-overlay').classList.toggle('active');
+  };
+
+  window.addToCart = function(id, name, price, image) {
+    const existingItem = cart.find(item => item.id === id);
+    if (existingItem) {
+      existingItem.quantity += 1;
+    } else {
+      cart.push({ id, name, price, image, quantity: 1 });
+    }
+    
+    // UI Effects
+    const badge = document.getElementById('cart-badge');
+    badge.classList.remove('cart-bounce');
+    void badge.offsetWidth; // trigger reflow
+    badge.classList.add('cart-bounce');
+    
+    updateCartUI();
+  };
+
+  window.changeQuantity = function(id, delta) {
+    const itemIndex = cart.findIndex(item => item.id === id);
+    if (itemIndex > -1) {
+      cart[itemIndex].quantity += delta;
+      if (cart[itemIndex].quantity <= 0) {
+        cart.splice(itemIndex, 1);
+      }
+      updateCartUI();
+    }
+  };
+
+  window.updateCartUI = function() {
+    const container = document.getElementById('cart-items-container');
+    const badge = document.getElementById('cart-badge');
+    const totalPriceEl = document.getElementById('cart-total-price');
+    
+    // Update Badge
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    badge.innerText = totalItems;
+    
+    // Update Total Price
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    totalPriceEl.innerText = totalPrice.toLocaleString() + ' دينار';
+    
+    // Render Items
+    if (cart.length === 0) {
+      container.innerHTML = '<p style="text-align:center; padding:20px; color:var(--text-muted);">السلة فارغة حالياً</p>';
+      return;
+    }
+    
+    container.innerHTML = cart.map(item => `
+      <div class="cart-item">
+        <img src="${item.image}" alt="${item.name}" class="cart-item-img">
+        <div class="cart-item-details">
+          <div class="cart-item-title">${item.name}</div>
+          <div class="cart-item-price">${item.price.toLocaleString()} دينار</div>
+        </div>
+        <div class="cart-item-controls">
+          <button class="qty-btn" onclick="changeQuantity('${item.id}', 1)">+</button>
+          <span class="cart-item-qty">${item.quantity}</span>
+          <button class="qty-btn" onclick="changeQuantity('${item.id}', -1)">-</button>
+        </div>
+      </div>
+    `).join('');
+  };
+
+  window.getLocation = function() {
+    const statusText = document.getElementById('location-status');
+    const locationInput = document.getElementById('cart-customer-location');
+    
+    if (!navigator.geolocation) {
+      statusText.textContent = "المتصفح الخاص بك لا يدعم تحديد الموقع.";
+      statusText.style.color = "#e74c3c";
+      return;
+    }
+
+    statusText.textContent = "⏳ جارٍ تحديد الموقع...";
+    statusText.style.color = "var(--text-muted)";
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const mapsLink = `https://maps.google.com/?q=${lat},${lng}`;
+        locationInput.value = mapsLink;
+        statusText.textContent = "✅ تم تحديد الموقع بنجاح!";
+        statusText.style.color = "#2ecc71";
+      },
+      (error) => {
+        statusText.textContent = "❌ تعذر تحديد الموقع. يرجى إدخال العنوان يدوياً.";
+        statusText.style.color = "#e74c3c";
+      }
+    );
+  };
+
+  window.checkoutWhatsApp = function() {
+    if (cart.length === 0) {
+      alert("السلة فارغة! الرجاء إضافة وجبات قبل الطلب.");
+      return;
+    }
+
+    const customerName = document.getElementById('cart-customer-name').value.trim();
+    const customerLocation = document.getElementById('cart-customer-location').value.trim();
+
+    if (!customerName || !customerLocation) {
+      alert("الرجاء إدخال اسمك الكريم وعنوان التوصيل (أو تحديد الموقع).");
+      return;
+    }
+
+    const WHATSAPP_NUMBER = '9647708039500'; // رقم الواتساب الخاص بالمطعم
+    let message = `مرحباً، أريد طلب وجبات من أصل المندي:\n\n`;
+    message += `👤 *الاسم:* ${customerName}\n`;
+    message += `📍 *العنوان:* ${customerLocation}\n\n`;
+    message += `🛒 *الطلبات:*\n`;
+    
+    cart.forEach(item => {
+      message += `- ${item.quantity}x ${item.name} (${(item.price * item.quantity).toLocaleString()} دينار)\n`;
+    });
+    
+    const totalPrice = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    message += `\n💰 *الإجمالي:* ${totalPrice.toLocaleString()} دينار`;
+    
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+  };
+
   // ---- Particle System ----
   function createParticles() {
     const container = document.getElementById('particles');
@@ -145,10 +276,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // ---- Add to order button ----
+  // ---- Add to order button (for static menu cards) ----
   document.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
+
+      // Get menu card details to add to cart
+      const card = btn.closest('.menu-card');
+      if (card) {
+        const titleEl = card.querySelector('h3');
+        const priceEl = card.querySelector('.price');
+        const imgEl = card.querySelector('.menu-card-img');
+        
+        if (titleEl && priceEl) {
+          const name = titleEl.textContent.trim();
+          // Extract numbers from price string e.g. "130,000 دينار" -> 130000
+          const priceText = priceEl.textContent.replace(/[^\d]/g, '');
+          const price = parseInt(priceText) || 0;
+          const img = imgEl ? imgEl.getAttribute('src') : 'images/hero_mandi.png';
+          // Use name as ID for static items
+          const id = 'static-' + name.replace(/\s+/g, '-');
+          
+          window.addToCart(id, name, price, img);
+        }
+      }
+
       const originalText = btn.textContent;
       btn.textContent = '✓';
       btn.style.background = '#2ecc71';
@@ -211,10 +363,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const date = document.getElementById('resDate').value;
     const time = document.getElementById('resTime').value;
     const guests = document.getElementById('guests').value;
+    const occasion = document.getElementById('occasion').value;
+    const notes = document.getElementById('notes').value.trim();
 
     // Simple validation
     if (!name || !phone || !date || !time || !guests) {
-      // Highlight empty fields
       [
         { el: document.getElementById('guestName'), val: name },
         { el: document.getElementById('guestPhone'), val: phone },
@@ -234,15 +387,60 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Success animation
+    // Format occasion label
+    const occasionLabels = {
+      'birthday': '🎂 عيد ميلاد',
+      'anniversary': '💍 ذكرى سنوية',
+      'business': '💼 اجتماع عمل',
+      'family': '👨‍👩‍👧‍👦 تجمع عائلي',
+      'other': 'أخرى'
+    };
+
+    // Format date
+    const dateObj = new Date(date);
+    const formattedDate = dateObj.toLocaleDateString('ar-IQ', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+    // Format time
+    const [hours, minutes] = time.split(':');
+    const h = parseInt(hours);
+    const period = h >= 12 ? 'مساءً' : 'صباحاً';
+    const formattedHour = ((h % 12) || 12);
+    const formattedTime = `${formattedHour}:${minutes} ${period}`;
+
+    // Build WhatsApp message
+    const WHATSAPP_NUMBER = '9647708039500';
+    let message = `مرحباً، أريد حجز طاولة في مطعم أصل المندي:\n\n`;
+    message += `👤 *الاسم:* ${name}\n`;
+    message += `📞 *رقم الجوال:* ${phone}\n`;
+    message += `📅 *التاريخ:* ${formattedDate}\n`;
+    message += `🕐 *الوقت:* ${formattedTime}\n`;
+    message += `👥 *عدد الأشخاص:* ${guests}\n`;
+    if (occasion && occasionLabels[occasion]) {
+      message += `🎉 *المناسبة:* ${occasionLabels[occasion]}\n`;
+    }
+    if (notes) {
+      message += `📝 *ملاحظات:* ${notes}\n`;
+    }
+    message += `\nشكراً جزيلاً!`;
+
+    // Loading state
     const btn = document.getElementById('submitBtn');
     btn.textContent = '⏳ جارٍ الإرسال...';
     btn.disabled = true;
 
     setTimeout(() => {
+      // Open WhatsApp
+      const encodedMessage = encodeURIComponent(message);
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
+
+      // Show success UI
       document.getElementById('formContent').style.display = 'none';
       document.getElementById('formSuccess').style.display = 'block';
-    }, 1500);
+
+      // Reset button in background
+      btn.textContent = '🎉 تأكيد الحجز';
+      btn.disabled = false;
+    }, 1000);
   };
 
   // ---- Testimonials Slider ----
@@ -540,6 +738,27 @@ document.addEventListener('DOMContentLoaded', () => {
       card.className = 'menu-card reveal visible';
       card.dataset.category = meal.category || 'mandi';
       
+      // Parse tag and clean description
+      let displayDesc = meal.description || '';
+      let tag = '';
+      const tagMatch = displayDesc.match(/\[تصنيف:(.*?)\]/);
+      if (tagMatch) {
+        tag = tagMatch[1];
+        displayDesc = displayDesc.replace(/\[تصنيف:.*?\]/, '').trim();
+      }
+
+      let badgeHTML = '';
+      if (tag) {
+        let badgeClass = 'badge-default';
+        if (tag === 'الأكثر شهرة') badgeClass = 'badge-popular';
+        else if (tag === 'عائلية') badgeClass = 'badge-family';
+        else if (tag === 'جديد') badgeClass = 'badge-new';
+        else if (tag === 'عرض خاص') badgeClass = 'badge-special';
+        else if (tag === 'حار') badgeClass = 'badge-spicy';
+        
+        badgeHTML = `<span class="menu-badge ${badgeClass}">${tag}</span>`;
+      }
+      
       let adminControls = '';
       if (isAdmin) {
         adminControls = `
@@ -552,13 +771,14 @@ document.addEventListener('DOMContentLoaded', () => {
       card.innerHTML = `
         <div class="menu-card-img-wrap">
           <img src="${meal.image_url || 'images/hero_mandi.png'}" alt="${meal.name}" class="menu-card-img">
+          ${badgeHTML}
         </div>
         <div class="menu-card-body">
           <h3>${meal.name}</h3>
-          <p>${meal.description || ''}</p>
+          <p>${displayDesc}</p>
           <div class="menu-card-footer">
             <div class="price">${meal.price.toLocaleString()} <span>دينار</span></div>
-            <button class="add-btn" title="إضافة للطلب" onclick="this.innerHTML='✓'; this.style.background='#2ecc71'; this.style.color='white'; this.style.borderColor='#2ecc71'; setTimeout(()=> {this.innerHTML='+'; this.style.background=''; this.style.color=''; this.style.borderColor='';}, 1500)">+</button>
+            <button class="add-btn" title="إضافة للطلب" onclick="addToCart('${meal.id}', '${meal.name}', ${meal.price}, '${meal.image_url || 'images/hero_mandi.png'}'); this.innerHTML='✓'; this.style.background='#2ecc71'; this.style.color='white'; this.style.borderColor='#2ecc71'; setTimeout(()=> {this.innerHTML='+'; this.style.background=''; this.style.color=''; this.style.borderColor='';}, 1500)">+</button>
           </div>
           ${adminControls}
         </div>
