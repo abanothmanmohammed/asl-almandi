@@ -423,24 +423,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     message += `\nشكراً جزيلاً!`;
 
-    // Loading state
-    const btn = document.getElementById('submitBtn');
-    btn.textContent = '⏳ جارٍ الإرسال...';
-    btn.disabled = true;
+    // Open WhatsApp immediately to prevent popup blockers
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
 
-    setTimeout(() => {
-      // Open WhatsApp
-      const encodedMessage = encodeURIComponent(message);
-      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`, '_blank');
-
-      // Show success UI
-      document.getElementById('formContent').style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
-
-      // Reset button in background
-      btn.textContent = '🎉 تأكيد الحجز';
-      btn.disabled = false;
-    }, 1000);
+    // Show success UI
+    document.getElementById('formContent').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
   };
 
   // ---- Testimonials Slider ----

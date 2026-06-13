@@ -2074,3 +2074,21 @@ footer {
   font-size: 1.2rem;
   border-radius: var(--radius-sm);
 }
+
+/* Responsive mobile fixes for cart scroll */
+@media (max-width: 480px), (max-height: 750px) {
+  .cart-sidebar {
+    height: 100dvh;
+    display: block;
+    overflow-y: auto;
+  }
+  .cart-items-container {
+    flex: none;
+    overflow-y: visible;
+    max-height: none;
+  }
+  .cart-footer {
+    position: relative;
+    border-top: 1px solid var(--border);
+  }
+}
